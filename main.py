@@ -1,11 +1,11 @@
-from quart import Quart, request
+from flask import Flask, request
 from dotenv import load_dotenv
 from db import get_database
 import bson.json_util as json_util
 from os import environ
 
 
-app = Quart(__name__)
+app = Flask(__name__)
 
 load_dotenv()
 
@@ -13,11 +13,11 @@ db = get_database()
 aliens = db["aliens"]
 
 @app.route('/')
-async def hello():
+def hello():
     return 'hash bash slash dash'
 
 @app.route('/new', methods=["POST"])
-async def new_alien():
+def new_alien():
     try:
         if environ['ADMIN_PASS'] != request.args.get("pass_token"):
             return "ONLY ADMINS CAN CREATE NEW ALIENS"
@@ -50,7 +50,7 @@ async def new_alien():
         return "Something went wrong"
 
 @app.route('/update/<string:name>', methods=["PUT"])
-async def update(name):
+def update(name):
     try:
         if environ['ADMIN_PASS'] != request.args.get("pass_token"):
             return "ONLY ADMINS CAN UPDATE NEW ALIENS"
@@ -78,7 +78,7 @@ async def update(name):
         return "Something went wrong"
 
 @app.route('/get-all', methods=["GET"])
-async def getAll():
+def getAll():
     try:
         if environ['ADMIN_PASS'] != request.args.get("pass_token"):
             return "ONLY ADMINS CAN GET ALL THE ALIENS INFO"
@@ -91,7 +91,7 @@ async def getAll():
 
 
 @app.route('/delete/<string:name>', methods=["DELETE"])
-async def delete(name):
+def delete(name):
     try:
         if environ['ADMIN_PASS'] != request.args.get("pass_token"):
             return "ONLY ADMINS CAN DELETE NEW ALIENS"
